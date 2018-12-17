@@ -15,13 +15,13 @@ public class UserDaoImpl implements UserDao {
      * @throws SQLException
      */
     @Override
-    public void save(Connection connection, User user) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareCall("INSERT INTO tbl_user VALUES (?,?,?,?)");
+    public boolean save(Connection connection, User user) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareCall("INSERT INTO ServletStudyUser VALUES (?,?,?,?)");
         preparedStatement.setLong(1, user.getId());
         preparedStatement.setString(2,user.getPassword());
         preparedStatement.setString(3,user.getName());
         preparedStatement.setString(4,user.getEmail());
-        preparedStatement.execute();
+        return preparedStatement.execute();
     }
 
     /**
@@ -31,14 +31,14 @@ public class UserDaoImpl implements UserDao {
      * @throws SQLException
      */
     @Override
-    public void update(Connection connection,Long id, User user) throws SQLException {
-        String updateSql = "UPDATE tbl_user SET \"name\"=?,\"password\"=?,\"email\"=? WHERE \"id\"=?";
+    public boolean update(Connection connection, Long id, User user) throws SQLException {
+        String updateSql = "UPDATE ServletStudyUser SET \"uname\"=?,\"upwd\"=?,\"umail\"=? WHERE \"id\"=?";
         PreparedStatement preparedStatement = connection.prepareCall(updateSql);
         preparedStatement.setString(1,user.getName());
         preparedStatement.setString(2,user.getPassword());
         preparedStatement.setString(3,user.getEmail());
         preparedStatement.setLong(4,id);
-        preparedStatement.execute();
+        return preparedStatement.execute();
     }
 
     /**
@@ -48,18 +48,18 @@ public class UserDaoImpl implements UserDao {
      * @throws SQLException
      */
     @Override
-    public void delete(Connection connection, User user) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareCall("DELETE FROM tbl_user WHERE \"id\" = ?");
+    public boolean delete(Connection connection, User user) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareCall("DELETE FROM ServletStudyUser WHERE \"uid\" = ?");
         preparedStatement.setLong(1,user.getId());
-        preparedStatement.execute();
+        return preparedStatement.execute();
     }
 
     @Override
     public ResultSet get(Connection connection, User user) throws SQLException {
-        String sql = "SELECT * FROM tbl_user WHERE \"name\"=? AND \"password\"=?";
+        String sql = "SELECT * FROM ServletStudyUser WHERE \"uname\"=? AND \"upwd\"=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1,user.getName());
         preparedStatement.setString(2,user.getPassword());
-        return null;
+        return preparedStatement.executeQuery();
     }
 }

@@ -11,23 +11,23 @@ import java.sql.SQLException;
 
 public class CheckUserService {
     private UserDao userDao = new UserDaoImpl();
-    public boolean check(User user){
-        Connection connection = null;
-        connection=ConnectionFactory.getInstance().makeConnection();
+
+    public boolean check(User user) {
+        Connection connection = ConnectionFactory.getInstance().makeConnection();
         try {
             connection.setAutoCommit(false);
-            ResultSet resultSet = userDao.get(connection,user);
-            while (resultSet.next()){
+            ResultSet resultSet = userDao.get(connection, user);
+            if (resultSet != null) {
                 return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             try {
                 connection.rollback();
-            }catch (SQLException e1) {
+            } catch (SQLException e1) {
                 e1.printStackTrace();
             }
-        }finally {
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
